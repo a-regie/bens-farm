@@ -1,0 +1,1 @@
+var json_Broilerchickendivision_8 = {"type":"FeatureCollection","name":"Broilerchickendivision_8","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[{"type":"Feature","properties":{"fid":"1"},"geometry":{"type":"LineString","coordinates":[[123.168702027728642,9.109071539743134],[123.168719794648553,9.108990769994616]]}}]}

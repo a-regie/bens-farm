@@ -1,0 +1,667 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title>Ben's Farm</title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/L.Control.Layers.Tree.min.js"></script>
+        <script src="js/leaflet-svg-shape-markers.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/CalanggamanLots_1.js"></script>
+        <script src="data/Fields_2.js"></script>
+        <script src="data/Irrigation_3.js"></script>
+        <script src="data/FarmentranceBotoboto_4.js"></script>
+        <script src="data/BasecampInfrastructure_5.js"></script>
+        <script src="data/Broilerchickenhousing_6.js"></script>
+        <script src="data/Broilerchickenfencedarea_7.js"></script>
+        <script src="data/Broilerchickendivision_8.js"></script>
+        <script src="data/Distance_9.js"></script>
+        <script src="data/Dimension_10.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        })
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        function removeEmptyRowsFromPopupContent(content, feature) {
+         var tempDiv = document.createElement('div');
+         tempDiv.innerHTML = content;
+         var rows = tempDiv.querySelectorAll('tr');
+         for (var i = 0; i < rows.length; i++) {
+             var td = rows[i].querySelector('td.visible-with-data');
+             var key = td ? td.id : '';
+             if (td && td.classList.contains('visible-with-data') && feature.properties[key] == null) {
+                 rows[i].parentNode.removeChild(rows[i]);
+             }
+         }
+         return tempDiv.innerHTML;
+        }
+        document.querySelector(".leaflet-popup-pane").addEventListener("load", function(event) {
+          var tagName = event.target.tagName,
+            popup = map._popup;
+          // Also check if flag is already set.
+          if (tagName === "IMG" && popup && !popup._updated) {
+            popup._updated = true; // Set flag to prevent looping.
+            popup.update();
+          }
+        }, true);
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+            map.setMaxBounds(map.getBounds());
+        }
+        map.createPane('pane_GoogleSatelliteImagery_0');
+        map.getPane('pane_GoogleSatelliteImagery_0').style.zIndex = 400;
+        var layer_GoogleSatelliteImagery_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleSatelliteImagery_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 18
+        });
+        layer_GoogleSatelliteImagery_0;
+        map.addLayer(layer_GoogleSatelliteImagery_0);
+        function pop_CalanggamanLots_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Lot number</th>\
+                        <td>' + (feature.properties['lot_num'] !== null ? autolinker.link(feature.properties['lot_num'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Description</th>\
+                        <td>' + (feature.properties['description'] !== null ? autolinker.link(feature.properties['description'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Area (sq m)</th>\
+                        <td>' + (feature.properties['area_sqm'] !== null ? autolinker.link(feature.properties['area_sqm'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+            var popup = layer.getPopup();
+            var content = popup.getContent();
+            var updatedContent = removeEmptyRowsFromPopupContent(content, feature);
+            popup.setContent(updatedContent);
+        }
+
+        function style_CalanggamanLots_1_0() {
+            return {
+                pane: 'pane_CalanggamanLots_1',
+                opacity: 1,
+                color: 'rgba(255,255,255,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 3.0, 
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_CalanggamanLots_1');
+        map.getPane('pane_CalanggamanLots_1').style.zIndex = 401;
+        map.getPane('pane_CalanggamanLots_1').style['mix-blend-mode'] = 'normal';
+        var layer_CalanggamanLots_1 = new L.geoJson(json_CalanggamanLots_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_CalanggamanLots_1',
+            layerName: 'layer_CalanggamanLots_1',
+            pane: 'pane_CalanggamanLots_1',
+            onEachFeature: pop_CalanggamanLots_1,
+            style: style_CalanggamanLots_1_0,
+        });
+        bounds_group.addLayer(layer_CalanggamanLots_1);
+        map.addLayer(layer_CalanggamanLots_1);
+        function pop_Fields_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Name</th>\
+                        <td>' + (feature.properties['name'] !== null ? autolinker.link(feature.properties['name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Lot number</th>\
+                        <td>' + (feature.properties['lot_num'] !== null ? autolinker.link(feature.properties['lot_num'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Area (sq m)</th>\
+                        <td>' + (feature.properties['area_sqm'] !== null ? autolinker.link(feature.properties['area_sqm'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+            var popup = layer.getPopup();
+            var content = popup.getContent();
+            var updatedContent = removeEmptyRowsFromPopupContent(content, feature);
+            popup.setContent(updatedContent);
+        }
+
+        function style_Fields_2_0() {
+            return {
+                pane: 'pane_Fields_2',
+                opacity: 1,
+                color: 'rgba(227,26,28,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 3.0, 
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Fields_2');
+        map.getPane('pane_Fields_2').style.zIndex = 402;
+        map.getPane('pane_Fields_2').style['mix-blend-mode'] = 'normal';
+        var layer_Fields_2 = new L.geoJson(json_Fields_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Fields_2',
+            layerName: 'layer_Fields_2',
+            pane: 'pane_Fields_2',
+            onEachFeature: pop_Fields_2,
+            style: style_Fields_2_0,
+        });
+        bounds_group.addLayer(layer_Fields_2);
+        map.addLayer(layer_Fields_2);
+        function pop_Irrigation_3(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+            var popup = layer.getPopup();
+            var content = popup.getContent();
+            var updatedContent = removeEmptyRowsFromPopupContent(content, feature);
+            popup.setContent(updatedContent);
+        }
+
+        function style_Irrigation_3_0() {
+            return {
+                pane: 'pane_Irrigation_3',
+                opacity: 1,
+                color: 'rgba(17,241,237,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: false,
+            }
+        }
+        map.createPane('pane_Irrigation_3');
+        map.getPane('pane_Irrigation_3').style.zIndex = 403;
+        map.getPane('pane_Irrigation_3').style['mix-blend-mode'] = 'normal';
+        var layer_Irrigation_3 = new L.geoJson(json_Irrigation_3, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_Irrigation_3',
+            layerName: 'layer_Irrigation_3',
+            pane: 'pane_Irrigation_3',
+            onEachFeature: pop_Irrigation_3,
+            style: style_Irrigation_3_0,
+        });
+        bounds_group.addLayer(layer_Irrigation_3);
+        map.addLayer(layer_Irrigation_3);
+        function pop_FarmentranceBotoboto_4(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['descriptio'] !== null ? autolinker.link(feature.properties['descriptio'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['timestamp'] !== null ? autolinker.link(feature.properties['timestamp'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['begin'] !== null ? autolinker.link(feature.properties['begin'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['end'] !== null ? autolinker.link(feature.properties['end'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['altitudeMo'] !== null ? autolinker.link(feature.properties['altitudeMo'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['tessellate'] !== null ? autolinker.link(feature.properties['tessellate'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['extrude'] !== null ? autolinker.link(feature.properties['extrude'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['visibility'] !== null ? autolinker.link(feature.properties['visibility'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['drawOrder'] !== null ? autolinker.link(feature.properties['drawOrder'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['icon'] !== null ? autolinker.link(feature.properties['icon'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+            var popup = layer.getPopup();
+            var content = popup.getContent();
+            var updatedContent = removeEmptyRowsFromPopupContent(content, feature);
+            popup.setContent(updatedContent);
+        }
+
+        function style_FarmentranceBotoboto_4_0() {
+            return {
+                pane: 'pane_FarmentranceBotoboto_4',
+                shape: 'diamond',
+                radius: 8.8,
+                opacity: 1,
+                color: 'rgba(128,17,25,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(219,30,42,1.0)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_FarmentranceBotoboto_4');
+        map.getPane('pane_FarmentranceBotoboto_4').style.zIndex = 404;
+        map.getPane('pane_FarmentranceBotoboto_4').style['mix-blend-mode'] = 'normal';
+        var layer_FarmentranceBotoboto_4 = new L.geoJson(json_FarmentranceBotoboto_4, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_FarmentranceBotoboto_4',
+            layerName: 'layer_FarmentranceBotoboto_4',
+            pane: 'pane_FarmentranceBotoboto_4',
+            onEachFeature: pop_FarmentranceBotoboto_4,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.shapeMarker(latlng, style_FarmentranceBotoboto_4_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_FarmentranceBotoboto_4);
+        map.addLayer(layer_FarmentranceBotoboto_4);
+        function pop_BasecampInfrastructure_5(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">name_bldg</th>\
+                        <td>' + (feature.properties['name_bldg'] !== null ? autolinker.link(feature.properties['name_bldg'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">dimension_m</th>\
+                        <td>' + (feature.properties['dimension_m'] !== null ? autolinker.link(feature.properties['dimension_m'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+            var popup = layer.getPopup();
+            var content = popup.getContent();
+            var updatedContent = removeEmptyRowsFromPopupContent(content, feature);
+            popup.setContent(updatedContent);
+        }
+
+        function style_BasecampInfrastructure_5_0() {
+            return {
+                pane: 'pane_BasecampInfrastructure_5',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 3.0, 
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_BasecampInfrastructure_5');
+        map.getPane('pane_BasecampInfrastructure_5').style.zIndex = 405;
+        map.getPane('pane_BasecampInfrastructure_5').style['mix-blend-mode'] = 'normal';
+        var layer_BasecampInfrastructure_5 = new L.geoJson(json_BasecampInfrastructure_5, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_BasecampInfrastructure_5',
+            layerName: 'layer_BasecampInfrastructure_5',
+            pane: 'pane_BasecampInfrastructure_5',
+            onEachFeature: pop_BasecampInfrastructure_5,
+            style: style_BasecampInfrastructure_5_0,
+        });
+        bounds_group.addLayer(layer_BasecampInfrastructure_5);
+        map.addLayer(layer_BasecampInfrastructure_5);
+        function pop_Broilerchickenhousing_6(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Type'] !== null ? autolinker.link(feature.properties['Type'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+            var popup = layer.getPopup();
+            var content = popup.getContent();
+            var updatedContent = removeEmptyRowsFromPopupContent(content, feature);
+            popup.setContent(updatedContent);
+        }
+
+        function style_Broilerchickenhousing_6_0(feature) {
+            switch(String(feature.properties['Type'])) {
+                case 'Brooder':
+                    return {
+                pane: 'pane_Broilerchickenhousing_6',
+                opacity: 1,
+                color: 'rgba(102,51,24,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(225,160,125,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'Grower':
+                    return {
+                pane: 'pane_Broilerchickenhousing_6',
+                opacity: 1,
+                color: 'rgba(102,51,24,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(179,90,42,1.0)',
+                interactive: false,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Broilerchickenhousing_6');
+        map.getPane('pane_Broilerchickenhousing_6').style.zIndex = 406;
+        map.getPane('pane_Broilerchickenhousing_6').style['mix-blend-mode'] = 'normal';
+        var layer_Broilerchickenhousing_6 = new L.geoJson(json_Broilerchickenhousing_6, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_Broilerchickenhousing_6',
+            layerName: 'layer_Broilerchickenhousing_6',
+            pane: 'pane_Broilerchickenhousing_6',
+            onEachFeature: pop_Broilerchickenhousing_6,
+            style: style_Broilerchickenhousing_6_0,
+        });
+        bounds_group.addLayer(layer_Broilerchickenhousing_6);
+        map.addLayer(layer_Broilerchickenhousing_6);
+        function pop_Broilerchickenfencedarea_7(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+            var popup = layer.getPopup();
+            var content = popup.getContent();
+            var updatedContent = removeEmptyRowsFromPopupContent(content, feature);
+            popup.setContent(updatedContent);
+        }
+
+        function style_Broilerchickenfencedarea_7_0() {
+            return {
+                pane: 'pane_Broilerchickenfencedarea_7',
+                opacity: 1,
+                color: 'rgba(255,127,0,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+                interactive: false,
+            }
+        }
+        map.createPane('pane_Broilerchickenfencedarea_7');
+        map.getPane('pane_Broilerchickenfencedarea_7').style.zIndex = 407;
+        map.getPane('pane_Broilerchickenfencedarea_7').style['mix-blend-mode'] = 'normal';
+        var layer_Broilerchickenfencedarea_7 = new L.geoJson(json_Broilerchickenfencedarea_7, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_Broilerchickenfencedarea_7',
+            layerName: 'layer_Broilerchickenfencedarea_7',
+            pane: 'pane_Broilerchickenfencedarea_7',
+            onEachFeature: pop_Broilerchickenfencedarea_7,
+            style: style_Broilerchickenfencedarea_7_0,
+        });
+        bounds_group.addLayer(layer_Broilerchickenfencedarea_7);
+        map.addLayer(layer_Broilerchickenfencedarea_7);
+        function pop_Broilerchickendivision_8(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+            var popup = layer.getPopup();
+            var content = popup.getContent();
+            var updatedContent = removeEmptyRowsFromPopupContent(content, feature);
+            popup.setContent(updatedContent);
+        }
+
+        function style_Broilerchickendivision_8_0() {
+            return {
+                pane: 'pane_Broilerchickendivision_8',
+                opacity: 1,
+                color: 'rgba(250,255,57,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Broilerchickendivision_8');
+        map.getPane('pane_Broilerchickendivision_8').style.zIndex = 408;
+        map.getPane('pane_Broilerchickendivision_8').style['mix-blend-mode'] = 'normal';
+        var layer_Broilerchickendivision_8 = new L.geoJson(json_Broilerchickendivision_8, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Broilerchickendivision_8',
+            layerName: 'layer_Broilerchickendivision_8',
+            pane: 'pane_Broilerchickendivision_8',
+            onEachFeature: pop_Broilerchickendivision_8,
+            style: style_Broilerchickendivision_8_0,
+        });
+        bounds_group.addLayer(layer_Broilerchickendivision_8);
+        map.addLayer(layer_Broilerchickendivision_8);
+        function pop_Distance_9(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['distance'] !== null ? autolinker.link(feature.properties['distance'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['unit'] !== null ? autolinker.link(feature.properties['unit'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+            var popup = layer.getPopup();
+            var content = popup.getContent();
+            var updatedContent = removeEmptyRowsFromPopupContent(content, feature);
+            popup.setContent(updatedContent);
+        }
+
+        function style_Distance_9_0() {
+            return {
+                pane: 'pane_Distance_9',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_Distance_9');
+        map.getPane('pane_Distance_9').style.zIndex = 409;
+        map.getPane('pane_Distance_9').style['mix-blend-mode'] = 'normal';
+        var layer_Distance_9 = new L.geoJson(json_Distance_9, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_Distance_9',
+            layerName: 'layer_Distance_9',
+            pane: 'pane_Distance_9',
+            onEachFeature: pop_Distance_9,
+            style: style_Distance_9_0,
+        });
+        bounds_group.addLayer(layer_Distance_9);
+        function pop_Dimension_10(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['dimensions_ft'] !== null ? autolinker.link(feature.properties['dimensions_ft'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['unit'] !== null ? autolinker.link(feature.properties['unit'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+            var popup = layer.getPopup();
+            var content = popup.getContent();
+            var updatedContent = removeEmptyRowsFromPopupContent(content, feature);
+            popup.setContent(updatedContent);
+        }
+
+        function style_Dimension_10_0() {
+            return {
+                pane: 'pane_Dimension_10',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_Dimension_10');
+        map.getPane('pane_Dimension_10').style.zIndex = 410;
+        map.getPane('pane_Dimension_10').style['mix-blend-mode'] = 'normal';
+        var layer_Dimension_10 = new L.geoJson(json_Dimension_10, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_Dimension_10',
+            layerName: 'layer_Dimension_10',
+            pane: 'pane_Dimension_10',
+            onEachFeature: pop_Dimension_10,
+            style: style_Dimension_10_0,
+        });
+        bounds_group.addLayer(layer_Dimension_10);
+            var title = new L.Control();
+            title.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
+            };
+            title.update = function () {
+                this._div.innerHTML = '<h2>Ben\'s Farm</h2>';
+            };
+            title.addTo(map);
+            var abstract = new L.Control({'position':'topright'});
+            abstract.onAdd = function (map) {
+                this._div = L.DomUtil.create('div',
+                'leaflet-control abstract');
+                this._div.id = 'abstract'
+
+                    abstract.show();
+                    return this._div;
+                };
+                abstract.show = function () {
+                    this._div.classList.remove("abstract");
+                    this._div.classList.add("abstractUncollapsed");
+                    this._div.innerHTML = 'Ben\'s Farm is located in Zamboanguita, Negros Oriental. The farm aims to help stabilize the price of vegetables and grains (rice, corn) in our market region.';
+            };
+            abstract.addTo(map);
+        var baseMaps = {};
+        var overlaysTree = [
+            {label: '<img src="legend/Dimension_10.png" /> Dimension', layer: layer_Dimension_10},
+            {label: '<img src="legend/Distance_9.png" /> Distance', layer: layer_Distance_9},
+            {label: '<img src="legend/Broilerchickendivision_8.png" /> Broiler chicken - division', layer: layer_Broilerchickendivision_8},
+            {label: '<img src="legend/Broilerchickenfencedarea_7.png" /> Broiler chicken - fenced area', layer: layer_Broilerchickenfencedarea_7},
+            {label: 'Broiler chicken - housing<br /><table><tr><td style="text-align: center;"><img src="legend/Broilerchickenhousing_6_Brooder0.png" /></td><td>Brooder</td></tr><tr><td style="text-align: center;"><img src="legend/Broilerchickenhousing_6_Grower1.png" /></td><td>Grower</td></tr></table>', layer: layer_Broilerchickenhousing_6},
+            {label: '<img src="legend/BasecampInfrastructure_5.png" /> Basecamp Infrastructure', layer: layer_BasecampInfrastructure_5},
+        {label: '<b>Area of Interest (AOI)</b>', selectAllCheckbox: true, children: [
+            {label: '<img src="legend/FarmentranceBotoboto_4.png" /> Farm entrance (Boto-boto)', layer: layer_FarmentranceBotoboto_4},
+            {label: '<img src="legend/Irrigation_3.png" /> Irrigation', layer: layer_Irrigation_3},
+            {label: '<img src="legend/Fields_2.png" /> Fields', layer: layer_Fields_2},
+            {label: '<img src="legend/CalanggamanLots_1.png" /> Calanggaman Lots', layer: layer_CalanggamanLots_1},]},
+            {label: "Google Satellite Imagery", layer: layer_GoogleSatelliteImagery_0},]
+        var lay = L.control.layers.tree(null, overlaysTree,{
+            //namedToggle: true,
+            //selectorBack: false,
+            //closedSymbol: '&#8862; &#x1f5c0;',
+            //openedSymbol: '&#8863; &#x1f5c1;',
+            //collapseAll: 'Collapse all',
+            //expandAll: 'Expand all',
+            collapsed: false, 
+        });
+        lay.addTo(map);
+        setBounds();
+        var i = 0;
+        layer_Distance_9.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((exp_label_Distance_9_eval_expression(context) !== null?String('<div style="color: #ffffff; font-size: 14pt; font-family: \'Open Sans\', sans-serif;">' + exp_label_Distance_9_eval_expression(context)) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Distance_9'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Dimension_10.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((exp_label_Dimension_10_eval_expression(context) !== null?String('<div style="color: #ffffff; font-size: 14pt; font-family: \'Open Sans\', sans-serif;">' + exp_label_Dimension_10_eval_expression(context)) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Dimension_10'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        resetLabels([layer_CalanggamanLots_1,layer_Distance_9,layer_Dimension_10]);
+        map.on("zoomend", function(){
+            resetLabels([layer_CalanggamanLots_1,layer_Distance_9,layer_Dimension_10]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_CalanggamanLots_1,layer_Distance_9,layer_Dimension_10]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_CalanggamanLots_1,layer_Distance_9,layer_Dimension_10]);
+        });
+        </script>
+    </body>
+</html>
